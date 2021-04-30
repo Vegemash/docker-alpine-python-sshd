@@ -26,9 +26,12 @@ print_fingerprints() {
     local BASE_DIR=${1-'/etc/ssh'}
     for item in dsa rsa ecdsa ed25519; do
         echo ">>> Fingerprints for ${item} host key"
-        ssh-keygen -E md5 -lf ${BASE_DIR}/ssh_host_${item}_key
-        ssh-keygen -E sha256 -lf ${BASE_DIR}/ssh_host_${item}_key
-        ssh-keygen -E sha512 -lf ${BASE_DIR}/ssh_host_${item}_key
+        for hashalg in md5 sha256 sha512; do 
+          key_file=${BASE_DIR}/ssh_host_${item}_key
+          if [[ -e $key_file ]]; then
+            ssh-keygen -E $hashalg -lf $key_file
+          fi
+        done
     done
 }
 
@@ -52,7 +55,7 @@ if ls /etc/ssh/keys/ssh_host_* 1> /dev/null 2>&1; then
 elif ls /etc/ssh/ssh_host_* 1> /dev/null 2>&1; then
     echo ">> Found Host keys in default location"
     # Don't do anything
-    print_fingerprints
+    print_fingerprints /etc/ssh
 else
     echo ">> Generating new host keys"
     mkdir -p /etc/ssh/keys
