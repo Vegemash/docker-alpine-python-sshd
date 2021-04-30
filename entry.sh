@@ -132,6 +132,11 @@ if [[ "${SSH_ENABLE_PASSWORD_AUTH}" == "true" ]] || [[ "${SSH_ENABLE_ROOT_PASSWO
     if [[ "${SSH_ENABLE_ROOT_PASSWORD_AUTH}" == "true" ]]; then
         echo 'set /files/etc/ssh/sshd_config/PermitRootLogin yes' | augtool -s 1> /dev/null
         echo "WARNING: password authentication for root user enabled."
+        echo "root:password" | chpasswd
+        if [[ $? -ne 0 ]]; then
+          echo "setting password failed"
+          exit 1
+        fi
     else
         echo "INFO: This password authentication is not enabled for the root user. Set SSH_ENABLE_ROOT_PASSWORD_AUTH=true to enable."
     fi
