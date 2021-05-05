@@ -125,7 +125,7 @@ fi
 if [ -v MOTD ]; then
     echo -e "$MOTD" > /etc/motd
 fi
-echo 'set /files/etc/ssh/sshd_config/LogLevel DEBUG3' | augtool -s 1> /dev/null
+echo 'set /files/etc/ssh/sshd_config/LogLevel DEBUG' | augtool -s 1> /dev/null
 
 # PasswordAuthentication (disabled by default)
 if [[ "${SSH_ENABLE_PASSWORD_AUTH}" == "true" ]] || [[ "${SSH_ENABLE_ROOT_PASSWORD_AUTH}" == "true" ]]; then
